@@ -15,7 +15,7 @@ public class Lexer {
         stringHandler = new StringHandler(value);
         tokens = new LinkedList<Token>();
         hashtokens = new HashMap<String, TokenType>();
-        Maketoken();
+        MakeHashtokens();
 
     }
 
@@ -29,20 +29,25 @@ public class Lexer {
      * Then for the value it is the tokenType which is FOR
      * I reallly need to do the testing for this lexer method 
      */
-    public void Maketoken(){
 
-        int currentChar = charPos;
+     /*
+      *  int currentChar = charPos;
         Token token;
         TokenType tokenType;
         String currentString = stringHandler.PeekString(currentChar);
 
+        
         if (currentString.equals("for")){
             tokenType = TokenType.FOR;
             token = new Token(tokenType, linePos, currentChar);
             hashtokens.put(currentString, tokenType);
         }
 
-    }
+        System.out.println("contents:" + hashtokens);
+
+      */
+    
+    
 
     public void Lex(){
 
@@ -56,6 +61,17 @@ public class Lexer {
         // peek at the first line 
         stringHandler.Peek(currentChar);
 
+        /*
+         * 
+            In your loop in Lex, we need to deal with comments. 
+            Comments in AWK start with # and go to the end of the line (like // comments in Java).
+             When you encounter a #, loop to the end of the line. No need to update line number or line index, 
+             because we aren’t going to output any tokens for comments.
+
+         */
+        if (stringHandler.Peek(currentChar) == '#'){
+            stringHandler.Swallow(currentChar);
+        }
         // if current char is a space or tab currentChar++
         if (stringHandler.Peek(currentChar) == ' ' || stringHandler.Peek(currentChar) == '\t' ){
             currentChar++;
@@ -67,25 +83,26 @@ public class Lexer {
             Token seperatorToken = new Token(seperator,linePos,currentChar);
             tokens.add(seperatorToken);
             currentChar++; 
-            linePos = 0;
+            linePos++;
 
         }
         // If the character is a carriage return (\r), we will ignore it.
         //Im assuming that means you increment the currentChar.
         else if (stringHandler.Peek(currentChar) == '\r'){
             currentChar++;
-            linePos = 0;
+            linePos++;
         }
 
        else if (isWordORUnderScore(stringHandler.Peek(currentChar) )){
             tokens.add(ProccesWord(stringHandler.PeekString(currentChar), linePos));
-            
+            currentChar++;
         }
 
        else if (isDigitOrPeriod(stringHandler.Peek(currentChar))){
             tokens.add(ProccesNumber(stringHandler.PeekString(currentChar), linePos));
+            currentChar++;
         } else {
-            throw new Exception("Unrecognizable Character.");
+            throw new RuntimeException("Unrecognizable Character.");
         }
 
 
@@ -133,12 +150,26 @@ boolean isDigitOrPeriod (char c){
 
         // wordResults is used to add the characters to a string
         StringBuilder  Wordresults = new StringBuilder ();
-
+        
         //while position is less than the length of the specified string and is a letter, Digit or underscore
         while (position < input.length() && isWordORUnderScore(input.charAt(position))){
             Wordresults.append(input.charAt(position));
+
+            /*
+             * Modify “ProcessWord” so that it checks the hash map for known words and makes a token specific to the 
+             * word with no value if the word is in the hash map, but WORD otherwise. 
+             */
+    
+
             position++;
         }
+
+    //    if(hashtokens.get("for").equals(Wordresults)){
+
+       // }
+
+        
+
         // create the token then return it.
         Token wordToken = new Token(word,linePos,position,Wordresults.toString());
         charPos = position;
@@ -163,6 +194,61 @@ boolean isDigitOrPeriod (char c){
         charPos = position;
         return numberToken;
        
+
+    }
+
+    public void MakeHashtokens(){
+        
+
+        hashtokens.put("while", TokenType.WHILE);
+        hashtokens.put("if", TokenType.IF);
+        hashtokens.put("do", TokenType.DO);
+        hashtokens.put("for", TokenType.FOR);
+        hashtokens.put("continue", TokenType.CONTINUE);
+        hashtokens.put("break", TokenType.BREAK);
+        hashtokens.put("else", TokenType.ELSE);
+        hashtokens.put("return", TokenType.RETURN);
+        hashtokens.put("BEGIN", TokenType.BEGIN);
+        hashtokens.put("END", TokenType.END);
+        hashtokens.put("print", TokenType.PRINT);
+        hashtokens.put("printf", TokenType.PRINTF);
+        hashtokens.put("next", TokenType.NEXT);
+        hashtokens.put("in", TokenType.IN);
+        hashtokens.put("delete", TokenType.DELETE);
+        hashtokens.put("getline", TokenType.GETLINE);
+        hashtokens.put("exit", TokenType.EXIT);
+        hashtokens.put("nextfile", TokenType.NEXTFILE);
+        hashtokens.put("function", TokenType.FUNCTION);        
+
+       
+    }
+
+    public void HandleStringLiteral(String input, int position){
+
+        int currentPosition = charPos;
+        int StringLiteralEnd;
+        Token stringLiteral ;
+        String quoteString ="";
+
+
+        
+        if (currentPosition < input.length()){
+
+            stringHandler.Peek(currentPosition);
+
+            if (stringHandler.Peek(currentPosition) == '"'){
+
+                currentPosition++;
+                if (stringHandler.Peek(currentPosition) == '"'){
+                    StringLiteralEnd = currentPosition;
+                    quoteString.substring(stringHandler.Peek(currentPosition), StringLiteralEnd);
+                    stringLiteral = new Token(TokenType.STRINGLITERAL,position, currentPosition, quoteString);
+                }
+                  
+            }
+
+        }
+
 
     }
 
