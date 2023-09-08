@@ -73,7 +73,7 @@ public class Lexer {
             stringHandler.Swallow(currentChar);
         }
         // if current char is a space or tab currentChar++
-        if (stringHandler.Peek(currentChar) == ' ' || stringHandler.Peek(currentChar) == '\t' ){
+        else if (stringHandler.Peek(currentChar) == ' ' || stringHandler.Peek(currentChar) == '\t' ){
             currentChar++;
         }
         // if current char is '\n' add a token of seperator to the linkedList of tokens 
@@ -88,6 +88,8 @@ public class Lexer {
         }
         // If the character is a carriage return (\r), we will ignore it.
         //Im assuming that means you increment the currentChar.
+
+        // or do i use stringHandler.swallow
         else if (stringHandler.Peek(currentChar) == '\r'){
             currentChar++;
             linePos++;
@@ -163,12 +165,18 @@ boolean isDigitOrPeriod (char c){
 
             position++;
         }
+            
+      //  if (stringHandler.PeekString(position).equals("while") && hashtokens.containsKey("while") ){
+
+      //  }
+
+   //   if(hashtokens.containsKey(stringHandler.PeekString(position))){
+         
+   //    }
 
     //    if(hashtokens.get("for").equals(Wordresults)){
 
        // }
-
-        
 
         // create the token then return it.
         Token wordToken = new Token(word,linePos,position,Wordresults.toString());
@@ -223,33 +231,47 @@ boolean isDigitOrPeriod (char c){
        
     }
 
-    public void HandleStringLiteral(String input, int position){
+    public void HandleStringLiteral(){
 
         int currentPosition = charPos;
         int StringLiteralEnd;
-        Token stringLiteral ;
+        int linePos = 0;
+        Token stringLiteralToken ;
         String quoteString ="";
+    
+        try{
+            
+        while (!stringHandler.isDone()){
 
-
-        
-        if (currentPosition < input.length()){
-
+            // look at the first character
             stringHandler.Peek(currentPosition);
-
+            //increment to go through the characters 
+             currentPosition++;
+            // if the first character is "
             if (stringHandler.Peek(currentPosition) == '"'){
 
+                // increment the current position 
                 currentPosition++;
+                // then check if theres another "
                 if (stringHandler.Peek(currentPosition) == '"'){
+                    // if so set the StringLiteral End to the current position
                     StringLiteralEnd = currentPosition;
+                    /* add the characters in bewtween the two ""  then create a token
+                    then add it to the linked list of tokens then increment currentPositin
+                    in order to ensure the String is done
+                     */
                     quoteString.substring(stringHandler.Peek(currentPosition), StringLiteralEnd);
-                    stringLiteral = new Token(TokenType.STRINGLITERAL,position, currentPosition, quoteString);
+                    stringLiteralToken = new Token(TokenType.STRINGLITERAL,linePos, currentPosition, quoteString);
+                    tokens.add(stringLiteralToken);
+                   // currentPosition++;
                 }
+               
                   
             }
 
         }
-
-
+    } catch(IndexOutOfBoundsException e) {}
+        System.out.println("Error: IndexOutOfBoundsException" );
     }
 
 }

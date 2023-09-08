@@ -42,7 +42,7 @@ public class StringHandler {
 
 		int newPosition = indexPos + charAhead;
 
-		if (newPosition <= document.length()){
+		if (newPosition < document.length()){
 			return document.substring(indexPos ,newPosition);
 
 		} else {
@@ -86,11 +86,7 @@ public class StringHandler {
 
 	public void Swallow(int moveIndexNum) {
 
-		if (indexPos + moveIndexNum < document.length()){
-
-			indexPos += moveIndexNum;
-
-		}
+		indexPos = Math.min(indexPos + moveIndexNum, document.length());
 
 	}
 	/*
@@ -98,7 +94,7 @@ public class StringHandler {
 	 */
 	public boolean isDone() {
 
-		if (indexPos >=  document.length() ){
+		if (indexPos == document.length() ){
 			return true;
 		}	
 		
