@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -6,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main (String[] args) {
+    public static void main (String[] args) throws IOException {
 
         Path myPath;
        
@@ -29,13 +30,13 @@ public class Main {
 
             lexer.Lex();
 
-            for (Token token : lexer.tokens) {
+            for (Token token : lexer.GetLinkedListTokens()) {
                 System.out.println(token.toString());
             }
              
              
     
-        } catch (Exception e) {
+        } catch (IOException e) {
     
             e.printStackTrace();
         

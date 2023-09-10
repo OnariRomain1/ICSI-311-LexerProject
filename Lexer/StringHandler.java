@@ -1,7 +1,7 @@
 
 public class StringHandler {
 
-	public String document;
+	private String awkFile;
 	private int indexPos = 0;
 	
 	/*
@@ -11,17 +11,20 @@ public class StringHandler {
 
 	
 	 StringHandler(String AwkFile){
-		document = AwkFile;
+		awkFile = AwkFile;
 	 }
 
+	 public String getString(){
+		return awkFile;
+	 }
 	public char Peek(int charAhead) {
 
 		int newPosition = indexPos + charAhead;
 		char characters;
 		
-		if (newPosition < document.length()){
+		if (newPosition < awkFile.length()){
 
-			characters = document.charAt(newPosition);
+			characters = awkFile.charAt(newPosition);
 			return characters;
 
 		} else {
@@ -42,12 +45,12 @@ public class StringHandler {
 
 		int newPosition = indexPos + charAhead;
 
-		if (newPosition < document.length()){
-			return document.substring(indexPos ,newPosition);
+		if (newPosition < awkFile.length()){
+			return awkFile.substring(indexPos ,newPosition);
 
 		} else {
 
-			return document.substring(indexPos);
+			return awkFile.substring(indexPos);
 
 		}
 	}
@@ -63,9 +66,9 @@ public class StringHandler {
 		
 		char nextChar;
 
-		if (indexPos < document.length()){
+		if (indexPos < awkFile.length()){
 
-			nextChar = document.charAt(indexPos);
+			nextChar = awkFile.charAt(indexPos);
 			indexPos++;
 
 			return nextChar;
@@ -86,7 +89,7 @@ public class StringHandler {
 
 	public void Swallow(int moveIndexNum) {
 
-		indexPos = Math.min(indexPos + moveIndexNum, document.length());
+		indexPos = Math.min(indexPos + moveIndexNum, awkFile.length());
 
 	}
 	/*
@@ -94,7 +97,7 @@ public class StringHandler {
 	 */
 	public boolean isDone() {
 
-		if (indexPos == document.length() ){
+		if (indexPos == awkFile.length() ){
 			return true;
 		}	
 		
@@ -109,10 +112,10 @@ public class StringHandler {
 
 		String remainder;
 
-		if (indexPos < document.length()){
+		if (indexPos < awkFile.length()){
 
-			remainder = document.substring(indexPos);
-			indexPos = document.length();
+			remainder = awkFile.substring(indexPos);
+			indexPos = awkFile.length();
 
 			return remainder;
 		}
@@ -122,5 +125,9 @@ public class StringHandler {
 		return "";
 
 	}
+
+	public static void main(String[] args) {
+        
+    }
 	
 }

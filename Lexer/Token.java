@@ -3,7 +3,7 @@ public class Token {
 	
 	private TokenType tokenType;
 	private String tokenValue;
-	private int lineNum;
+	private int lineNumber;
 	private int charPosition;
 	
 	/*
@@ -12,7 +12,7 @@ public class Token {
 	public Token(TokenType tokenType, int lineNum, int charPosition) {
 	
 		this.tokenType = tokenType;
-		this.lineNum = lineNum;
+		this.lineNumber = lineNum;
 		this.charPosition = charPosition;
 
 	}
@@ -23,10 +23,24 @@ public class Token {
 	public Token(TokenType tokenType, int lineNum, int charPosition, String tokenValue) {
 
 		this.tokenType = tokenType;
-		this.lineNum = lineNum;
+		this.lineNumber = lineNum;
 		this.charPosition = charPosition;
 		this.tokenValue = tokenValue;
 		
+	}
+
+	public int getLineNumber(){
+		return lineNumber;
+	}
+	public int getCharPosition(){
+		return charPosition;
+	}
+	public String getTokenValue(){
+		return tokenValue;
+	}
+
+	public TokenType getTokenType(){
+		return tokenType;
 	}
 	/*
 	 * ToString Method
